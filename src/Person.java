@@ -1,20 +1,23 @@
-public class Person {
+public abstract class Person {
     private String name;
     private int age;
     private String contactNumber;
 
+    // Default constructor
     public Person() {
         this.name = "Unknown";
         this.age = 0;
         this.contactNumber = "Not Available";
     }
 
+    // Parameterized constructor
     public Person(String name, int age, String contactNumber) {
         this.name = name;
         this.age = age;
         this.contactNumber = contactNumber;
     }
 
+    // Getters and setters
     public String getName() {
         return name;
     }
