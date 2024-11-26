@@ -105,6 +105,32 @@ public class AssignmentTwo {
     }
 
     public void partFive() {
+        // Create instances of different objects
+        Employee emp1 = new Employee("Alice", 28, "1234567890", "E123", "Ride Operator");
+
+        // Create a new Ride object with maxRider set to 3
+        Ride ride1 = new Ride("Roller Coaster", "Thrill Ride", emp1, 3);
+
+        // Add 10 visitors to the queue
+        for (int i = 1; i <= 10; i++) {
+            Visitor visitor = new Visitor("Visitor " + i, 20 + i, "Ticket" + i, "T" + (1000 + i), "Roller Coaster");
+            ride1.getQueue().offer(visitor);  // Add visitor to the queue
+        }
+
+        // Print all visitors in the queue
+        System.out.println("Visitors in the Queue before the ride:");
+        ride1.printQueue();
+
+        // Run one cycle
+        ride1.runOneCycle();
+
+        // Print all visitors in the queue after one cycle is run
+        System.out.println("\nVisitors in the Queue after one cycle:");
+        ride1.printQueue();
+
+        // Print all visitors in the collection (ride history)
+        System.out.println("\nVisitors in the Ride History:");
+        ride1.printRideHistory();
     }
 
     public void partSix() {
