@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -137,6 +140,23 @@ public class Ride implements RideInterface {
 
         numOfCycles++;  // Increase the number of cycles run
         System.out.println("Cycle " + numOfCycles + " completed.");
+    }
+
+    public void exportRideHistory(String fileName) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            if (rideHistory.isEmpty()) {
+                System.out.println("No tourists have taken this amusement facility before.");
+                return;
+            }
+
+            for (Visitor visitor : rideHistory) {
+                writer.write("tourist: " + visitor.getName() + ", Ticket number: " + visitor.getTicketNumber());
+                writer.newLine();
+            }
+            System.out.println("The historical records of the amusement equipment have been successfully exported to the file: " + fileName);
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
 

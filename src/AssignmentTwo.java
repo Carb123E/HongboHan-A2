@@ -134,6 +134,23 @@ public class AssignmentTwo {
     }
 
     public void partSix() {
+        Employee emp1 = new Employee("Alice", 28, "1234567890", "E123", "Ride Operator");
+
+        Ride ride1 = new Ride("Extreme roller coaster", "Thrilling type", emp1, 3);
+
+        for (int i = 1; i <= 5; i++) {
+            Visitor visitor = new Visitor("tourist " + i, 20 + i, "Ticket" + i, "T" + (1000 + i), "Extreme roller coaster");
+            ride1.getQueue().offer(visitor);
+        }
+
+        System.out.println("Tourists queuing for amusement facilities：");
+        ride1.printQueue();
+
+        ride1.runOneCycle();
+
+        String fileName = "rideHistory.txt";
+        ride1.exportRideHistory(fileName);
+        ride1.printRideHistory();
     }
 
     public void partSeven() {
