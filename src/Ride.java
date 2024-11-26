@@ -8,12 +8,10 @@ public class Ride implements RideInterface {
     private String rideName;
     private String rideType;
     private Employee operator;
-    private Queue<Visitor> queue;  // Queue for waiting visitors
-    private LinkedList<Visitor> rideHistory;  // LinkedList for visitors who have taken the ride
-    private int maxRider;  // Maximum number of visitors the ride can take in one cycle
-    private int numOfCycles;  // Number of times the ride has been run
-
-    // Constructor
+    private Queue<Visitor> queue;
+    private LinkedList<Visitor> rideHistory;
+    private int maxRider;
+    private int numOfCycles;
     public Ride(String rideName, String rideType, Employee operator, int maxRider) {
         this.rideName = rideName;
         this.rideType = rideType;
@@ -23,35 +21,32 @@ public class Ride implements RideInterface {
         this.maxRider = maxRider;
         this.numOfCycles = 0;
     }
-    // Default constructor
     public Ride() {
         this.rideName = "Unknown Ride";
         this.rideType = "Unknown Type";
-        this.operator = null;  // No operator assigned
-        this.queue = new LinkedList<>();  // Initialize an empty queue
-        this.rideHistory = new LinkedList<>();  // Initialize an empty ride history
+        this.operator = null;
+        this.queue = new LinkedList<>();
+        this.rideHistory = new LinkedList<>();
     }
 
-    // Parameterized constructor
     public Ride(String rideName, String rideType, Employee operator) {
         this.rideName = rideName;
         this.rideType = rideType;
         this.operator = operator;
-        this.queue = new LinkedList<>();  // Initialize an empty queue
-        this.rideHistory = new LinkedList<>();  // Initialize an empty ride history
+        this.queue = new LinkedList<>();
+        this.rideHistory = new LinkedList<>();
     }
-
-    // Implement methods from RideInterface
-
+    // Adds a visitor to the ride queue
     @Override
     public void addVisitorToQueue(Visitor visitor) {
-        queue.add(visitor);  // Add visitor to the queue
+        queue.add(visitor);  // Add the visitor to the queue
         System.out.println(visitor.getName() + " has been added to the queue for ride: " + rideName);
     }
 
+    // Removes a visitor from the ride queue
     @Override
     public void removeVisitorFromQueue(Visitor visitor) {
-        if (queue.contains(visitor)) {
+        if (queue.contains(visitor)) {  // Check if the visitor is in the queue
             queue.remove(visitor);  // Remove the visitor from the queue
             System.out.println(visitor.getName() + " has been removed from the queue for ride: " + rideName);
         } else {
@@ -59,130 +54,151 @@ public class Ride implements RideInterface {
         }
     }
 
+    // Prints the current queue of visitors for the ride
     @Override
     public void printQueue() {
-        if (queue.isEmpty()) {
+        if (queue.isEmpty()) {  // If the queue is empty
             System.out.println("The queue for " + rideName + " is currently empty.");
-        } else {
+        } else {  // If there are visitors in the queue
             System.out.println("Queue for " + rideName + ":");
-            for (Visitor v : queue) {
+            for (Visitor v : queue) {  // Iterate through the queue
                 System.out.println(v.getName() + " (Ticket: " + v.getTicketNumber() + ")");
             }
         }
     }
 
-    // Add a visitor to the ride history
+    // Adds a visitor to the ride history
     @Override
     public void addVisitorToHistory(Visitor visitor) {
-        rideHistory.add(visitor);  // Add the visitor to the ride history
+        rideHistory.add(visitor);  // Add the visitor to the ride history list
         System.out.println(visitor.getName() + " has been added to the ride history for: " + rideName);
     }
 
-    // Check if a visitor is in the ride history
+    // Checks if a visitor is already in the ride history
     @Override
     public boolean checkVisitorFromHistory(Visitor visitor) {
-        if (rideHistory.contains(visitor)) {
+        if (rideHistory.contains(visitor)) {  // Check if the visitor is in the ride history
             System.out.println(visitor.getName() + " is in the ride history for: " + rideName);
-            return true;
+            return true;  // Return true if the visitor is in history
         } else {
             System.out.println(visitor.getName() + " is not in the ride history for: " + rideName);
-            return false;
+            return false;  // Return false if the visitor is not in history
         }
     }
 
-    // Return the number of visitors in the ride history
+    // Returns the total number of visitors in the ride history
     @Override
     public int numberOfVisitors() {
-        return rideHistory.size();  // Number of visitors in the ride history
+        return rideHistory.size();  // Return the size of the ride history list
     }
 
-    // Print all visitors in the ride history
+    // Prints the ride history (all visitors who have ridden the ride)
     @Override
     public void printRideHistory() {
-        if (rideHistory.isEmpty()) {
+        if (rideHistory.isEmpty()) {  // If there are no visitors in the ride history
             System.out.println("No visitors have taken the ride " + rideName + " yet.");
-        } else {
+        } else {  // If there are visitors in the ride history
             System.out.println("Ride history for " + rideName + ":");
-            Iterator<Visitor> iterator = rideHistory.iterator();
-            while (iterator.hasNext()) {
-                Visitor visitor = iterator.next();
+            Iterator<Visitor> iterator = rideHistory.iterator();  // Iterate through the ride history
+            while (iterator.hasNext()) {  // While there are more visitors in the history
+                Visitor visitor = iterator.next();  // Get the next visitor
                 System.out.println(visitor.getName() + " (Ticket: " + visitor.getTicketNumber() + ")");
             }
         }
     }
 
+    // Sorts the ride history list using a custom comparator
     public void sortRideHistory() {
-        Collections.sort(rideHistory, new VisitorComparator());  // Sort the visitors in ride history
+        Collections.sort(rideHistory, new VisitorComparator());
     }
 
+    // Runs one cycle of the ride
     @Override
     public void runOneCycle() {
+        // Check if an operator is assigned to the ride
         if (operator == null) {
             System.out.println("Cannot run the ride. No operator assigned.");
             return;
         }
 
+        // Check if there are visitors in the queue to ride
         if (queue.isEmpty()) {
             System.out.println("Cannot run the ride. No visitors in the queue.");
             return;
         }
 
-        int ridersThisCycle = Math.min(maxRider, queue.size());  // Get the number of visitors to take in this cycle
+        // Determine how many visitors can ride this cycle (limited by maxRider or the queue size)
+        int ridersThisCycle = Math.min(maxRider, queue.size());
         System.out.println("Running cycle " + (numOfCycles + 1) + "...");
 
-        // Remove visitors from the queue and add them to the ride history
+        // Process each rider for this cycle
         for (int i = 0; i < ridersThisCycle; i++) {
-            Visitor visitor = queue.poll();  // Remove from the queue
-            addVisitorToHistory(visitor);  // Add to the ride history
+            // Poll a visitor from the queue
+            Visitor visitor = queue.poll();
+            // Add the visitor to the ride history
+            addVisitorToHistory(visitor);
         }
 
-        numOfCycles++;  // Increase the number of cycles run
+        // Increment the cycle count
+        numOfCycles++;
         System.out.println("Cycle " + numOfCycles + " completed.");
     }
 
+    // Exports the ride history to a file
     public void exportRideHistory(String fileName) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+            // Check if there are no visitors in the ride history
             if (rideHistory.isEmpty()) {
                 System.out.println("No tourists have taken this amusement facility before.");
                 return;
             }
 
+            // Write each visitor's information to the file
             for (Visitor visitor : rideHistory) {
                 writer.write("tourist: " + visitor.getName() + ", Ticket number: " + visitor.getTicketNumber());
-                writer.newLine();
+                writer.newLine();  // New line after each record
             }
+
+            // Confirmation message after successful export
             System.out.println("The historical records of the amusement equipment have been successfully exported to the file: " + fileName);
         } catch (IOException e) {
+            // Handle IOExceptions, such as file access issues
             System.out.println(e.getMessage());
         }
     }
 
-
+    // Imports the ride history from a file
     public void importRideHistory(String fileName) {
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
             String line;
+            // Read the file line by line
             while ((line = reader.readLine()) != null) {
+                // Only process lines that start with "tourist:"
                 if (line.startsWith("tourist:")) {
+                    // Split the line into name and ticket number
                     String[] parts = line.split(", Ticket number: ");
                     if (parts.length == 2) {
-                        String name = parts[0].replace("tourist: ", "").trim();
-                        String ticketNumber = parts[1].trim();
+                        String name = parts[0].replace("tourist: ", "").trim();  // Extract and trim the name
+                        String ticketNumber = parts[1].trim();  // Extract and trim the ticket number
+
+                        // Create a new Visitor object and add it to the ride history
                         Visitor visitor = new Visitor(name, 0, ticketNumber, "", rideName);
                         rideHistory.add(visitor);
                     }
                 }
             }
         } catch (FileNotFoundException e) {
+            // Handle case when the file is not found
             e.getMessage();
         } catch (IOException e) {
+            // Handle general IOExceptions
             e.getMessage();
         } catch (Exception e) {
+            // Catch any other exceptions
             e.getMessage();
         }
     }
 
-
-    // Getters and setters
     public String getRideName() {
         return rideName;
     }
