@@ -1,6 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Iterator;
@@ -156,6 +154,30 @@ public class Ride implements RideInterface {
             System.out.println("The historical records of the amusement equipment have been successfully exported to the file: " + fileName);
         } catch (IOException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+
+    public void importRideHistory(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("tourist:")) {
+                    String[] parts = line.split(", Ticket number: ");
+                    if (parts.length == 2) {
+                        String name = parts[0].replace("tourist: ", "").trim();
+                        String ticketNumber = parts[1].trim();
+                        Visitor visitor = new Visitor(name, 0, ticketNumber, "", rideName);
+                        rideHistory.add(visitor);
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.getMessage();
+        } catch (IOException e) {
+            e.getMessage();
+        } catch (Exception e) {
+            e.getMessage();
         }
     }
 

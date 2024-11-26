@@ -148,11 +148,23 @@ public class AssignmentTwo {
 
         ride1.runOneCycle();
 
-        String fileName = "rideHistory.txt";
+        String fileName = "rideHistory.csv";
         ride1.exportRideHistory(fileName);
         ride1.printRideHistory();
     }
 
     public void partSeven() {
+        Employee emp1 = new Employee("Alice", 28, "1234567890", "E123", "Ride Operator");
+        Ride ride1 = new Ride("Extreme roller coaster", "Thrilling type", emp1, 3);
+
+        // Import the ride history from the file created in the previous section
+        String fileName = "rideHistory.csv";
+        ride1.importRideHistory(fileName);
+
+        // Print the number of visitors imported
+        System.out.println("Number of imported tourists: " + ride1.getRideHistory().size());
+
+        // Print the list of all visitors imported
+        ride1.printRideHistory();
     }
 }
